@@ -1,4 +1,4 @@
-const API_BASE = "https://django-auth-backend-373p.onrender.com";
+const API_BASE = "https://django-auth-backend-373p.onrender.com/api/auth";
 
 // Helper to display messages
 function showMessage(text, isError = false) {
