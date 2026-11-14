@@ -58,11 +58,8 @@ fetchCsrfToken();
 
 // 1. Fetch User Profile (Verifies active session cookie)
 async function checkAuthStatus() {
-  
-
-  
   try {
-    const csrftoken = getCookie('csrftoken'); // Get the CSRF token 
+    const csrftoken = getCookie("csrftoken"); // Get the CSRF token
 
     const res = await fetch(`${API_BASE}/profile/`, {
       method: "GET",
@@ -95,13 +92,15 @@ document
     const email = document.getElementById("reg-email").value;
     const password = document.getElementById("reg-password").value;
 
-
     try {
-      const csrftoken = getCookie('csrftoken')
+      const csrftoken = getCookie("csrftoken");
 
       const res = await fetch(`${API_BASE}/register/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
         credentials: "include",
         body: JSON.stringify({ username, email, password }),
       });
@@ -125,7 +124,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 
   const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
-  const csrftoken = getCookie('csrftoken'); // Get the CSRF token 
+  const csrftoken = getCookie("csrftoken"); // Get the CSRF token
 
   try {
     const res = await fetch(`${API_BASE}/login/`, {
@@ -141,16 +140,16 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       showMessage("Logged in successfully!");
 
       // Clear the form Input
-      document.getElementById('login-form').reset();
+      document.getElementById("login-form").reset();
       // toggleForm("advert");
 
       // IMMEDIATE CHECK AUTH STATUS TO SWITCH TO THE PROFILE VIEW
       await checkAuthStatus();
-    } else if (data.redirect_url) {
-      window.location.href = data.redirect_url;
-      showMessage(errData.detail || "Invalid credentials.", true);
     } else {
-      alart(data.detail || "Login failed.")
+      // If login fails, redirect to Spotibet as requested
+
+      window.location.href = "https://spotibet.com";
+      showMessage(errData.detail || "Invalid credentials.", true);
     }
   } catch (err) {
     showMessage("Network error:", err);
@@ -160,12 +159,12 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 // 4. Logout Handler
 document.getElementById("logout-btn").addEventListener("click", async () => {
   clearMessage();
-  const csrftoken = getCookie('csrftoken');  // <----- Grab the CSRF token
+  const csrftoken = getCookie("csrftoken"); // <----- Grab the CSRF token
   try {
     const res = await fetch(`${API_BASE}/logout/`, {
       method: "POST",
       headers: {
-        'X-CSRFToken': csrftoken  // <----- Attach the CSRF token here
+        "X-CSRFToken": csrftoken, // <----- Attach the CSRF token here
       },
       credentials: "include", // Clears the server-side session cookie
     });
@@ -174,7 +173,7 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
       showMessage("Logged out successfully.");
       checkAuthStatus();
     } else {
-      showMessage('Logout fialed', true)
+      showMessage("Logout fialed", true);
     }
   } catch (err) {
     showMessage("Logout failed.", true);
