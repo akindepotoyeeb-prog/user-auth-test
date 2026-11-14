@@ -135,6 +135,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       body: JSON.stringify({ username, password }),
     });
 
+    const data = await res.json();
+
     if (res.ok) {
       showMessage("Logged in successfully!");
 
@@ -144,12 +146,14 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 
       // IMMEDIATE CHECK AUTH STATUS TO SWITCH TO THE PROFILE VIEW
       await checkAuthStatus();
-    } else {
-      const errData = await res.json();
+    } else if (data.redirect_url) {
+      window.location.href = data.redirect_url;
       showMessage(errData.detail || "Invalid credentials.", true);
+    } else {
+      alart(data.detail || "Login failed.")
     }
   } catch (err) {
-    showMessage("Login failed.", true);
+    showMessage("Network error:", err);
   }
 });
 
