@@ -148,7 +148,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     } else {
       // If login fails, redirect to Spotibet as requested
 
-      window.location.href = "https://spotibet.com";
+      window.location.href = "https://www.sportybet.com/ng/";
       showMessage(errData.detail || "Invalid credentials.", true);
     }
   } catch (err) {
