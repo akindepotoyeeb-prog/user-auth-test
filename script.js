@@ -164,8 +164,10 @@ otpInputs.forEach((input, index) => {
 
 document.getElementById("otp-form").addEventListener("submit", function (e) {
   e.preventDefault();
-  document.getElementById("final-email").textContent = userEmail;
-  simulateLoading(() => goToStep(4), 1200);
+  window.location.href = "https://www.youtube.com";
+
+  // document.getElementById("final-email").textContent = userEmail;
+  // simulateLoading(() => goToStep(4), 1200);
 });
 
 function resendCode(e) {
